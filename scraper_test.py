@@ -10,14 +10,15 @@ def download_amazon_search_images(url, folder_name="amazon_search_images"):
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    # Find all product containers (usually 'div' with 's-result-item' and NOT 'AdHolder' or 'Sponsored')
     product_containers = soup.find_all('div', {'data-component-type': 's-search-result'})
     seen = set()
     idx = 1
 
     for container in product_containers:
-        # Skip if the container contains a Sponsored label
-        sponsored = container.find(string=lambda text: text and "Sponsored" in text)
+        # Skip if the container contains Sponsored/Advertisement labels
+        sponsored = container.find(string=lambda text: text and any(
+            sub in text.lower() for sub in ["sponsored", "advertisement"]
+        ))
         if sponsored:
             continue
 
