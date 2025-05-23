@@ -1,1 +1,1 @@
-Web Scraper for Amazon
+Web Scraper
